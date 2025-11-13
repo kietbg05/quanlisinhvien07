@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>English Quiz – Choose the Right Word</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #e0f2fe;
+      --bg-card: #f9fafb;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5f5;
+      --option-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #60a5fa 0, transparent 55%),
+        radial-gradient(circle at bottom, #f97316 0, transparent 55%),
+        var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    .app {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 600px;
+      background: var(--bg-card);
+      border-radius: 28px;
+      padding: 22px 22px 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.25);
+      border: 1px solid var(--border);
+    }
+
+    .header {
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      font-size: 1.1rem;
+    }
+
+    .logo-star {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #facc15, #fb923c);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: 0 5px 12px rgba(249, 115, 22, 0.7);
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card {
+      margin-top: 4px;
+      background: linear-gradient(145deg, #eff6ff, #f9fafb);
+      border-radius: 22px;
+      padding: 18px 16px 16px;
+      border: 1px solid #d1d9ff;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 0.78rem;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      white-space: nowrap;
+    }
+
+    .chip-topic {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: rgba(37, 99, 235, 0.6);
+      font-weight: 600;
+    }
+
+    .emoji {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .option-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 2px solid var(--border);
+      background: var(--option-bg);
+      font-size: 0.95rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.12s, transform 0.08s, box-shadow 0.12s,
+        border-color 0.12s;
+    }
+
+    .option-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 16px rgba(15, 23, 42, 0.18);
+      border-color: rgba(37, 99, 235, 0.6);
+    }
+
+    .option-btn:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+
+    .option-btn.correct {
+      background: #16a34a;
+      color: #ecfdf3;
+      border-color: #15803d;
+      box-shadow: 0 10px 20px rgba(22, 163, 74, 0.65);
+    }
+
+    .option-btn.wrong {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #b91c1c;
+      animation: shake 0.25s;
+    }
+
+    .option-btn.disabled-option {
+      opacity: 0.55;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      50% { transform: translateX(3px); }
+      75% { transform: translateX(-2px); }
+      100% { transform: translateX(0); }
+    }
+
+    .feedback {
+      min-height: 1.3em;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .next-btn {
+      width: 100%;
+      border-radius: 999px;
+      padding: 9px 14px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #f97316);
+      color: #f9fafb;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.55);
+      transition: filter 0.12s, transform 0.08s, box-shadow 0.12s;
+    }
+
+    .next-btn[disabled] {
+      opacity: 0.45;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .next-btn:not([disabled]):hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.7);
+    }
+
+    .next-btn:not([disabled]):active {
+      transform: translateY(1px);
+      box-shadow: 0 9px 18px rgba(15, 23, 42, 0.6);
+    }
+
+    #fireworksCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30; /* above content, but still click-through */
+    }
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 18px 14px 20px;
+        border-radius: 22px;
+      }
+
+      .card {
+        padding: 14px 12px 14px;
+      }
+
+      .question-text {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Firework canvas -->
+  <canvas id="fireworksCanvas"></canvas>
+
+  <div class="app">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-star">★</span>
+        <span class="logo-text">Sky Word Quiz</span>
+      </div>
+      <p class="subtitle">Choose the correct word to complete the sentence.</p>
+    </header>
+
+    <main class="card">
+      <div class="meta-row">
+        <span id="topic" class="chip chip-topic">Fruit</span>
+        <span id="progress" class="chip">Question 1 of 5</span>
+        <span id="score" class="chip">Score: 0</span>
+      </div>
+
+      <div id="questionEmoji" class="emoji">🍋</div>
+
+      <p id="questionText" class="question-text">
+        A ____ is sour and green.
+      </p>
+
+      <div id="options" class="options"></div>
+
+      <p id="feedback" class="feedback"></p>
+
+      <button id="nextBtn" class="next-btn" type="button" disabled>
+        Next question ▶
+      </button>
+    </main>
+  </div>
+
+  <script>
+    // ------------------- Question data -------------------
+    const QUESTIONS = [
+      {
+        text: "A ____ is sour and green.",
+        emoji: "🍋",
+        options: ["lime", "cherry", "banana"],
+        correctIndex: 0,
+        topic: "Fruit",
+      },
+      {
+        text: "A ____ is long and yellow.",
+        emoji: "🍌",
+        options: ["banana", "grape", "apple"],
+        correctIndex: 0,
+        topic: "Fruit",
+      },
+      {
+        text: "A ____ is small and red.",
+        emoji: "🍒",
+        options: ["cherry", "watermelon", "coconut"],
+        correctIndex: 0,
+        topic: "Fruit",
+      },
+      {
+        text: "A ____ helps you see the time.",
+        emoji: "⏰",
+        options: ["clock", "plate", "pillow"],
+        correctIndex: 0,
+        topic: "Everyday objects",
+      },
+      {
+        text: "A ____ keeps your money safe.",
+        emoji: "👛",
+        options: ["wallet", "spoon", "shoe"],
+        correctIndex: 0,
+        topic: "Everyday objects",
+      },
+    ];
+
+    // ------------------- DOM elements -------------------
+    const questionTextEl = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("options");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("nextBtn");
+    const progressEl = document.getElementById("progress");
+    const scoreEl = document.getElementById("score");
+    const topicBadge = document.getElementById("topic");
+    const emojiEl = document.getElementById("questionEmoji");
+
+    // Fireworks
+    const canvas = document.getElementById("fireworksCanvas");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    let animationId = null;
+    let fireworksActive = false;
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let questionSolved = false;
+
+    // ------------------- Quiz logic -------------------
+    function renderQuestion() {
+      const q = QUESTIONS[currentQuestionIndex];
+
+      questionTextEl.textContent = q.text;
+      emojiEl.textContent = q.emoji || "";
+      emojiEl.style.display = q.emoji ? "block" : "none";
+
+      topicBadge.textContent = q.topic || "English";
+      progressEl.textContent =
+        "Question " + (currentQuestionIndex + 1) + " of " + QUESTIONS.length;
+      scoreEl.textContent = "Score: " + score;
+
+      feedbackEl.textContent = "";
+      optionsContainer.innerHTML = "";
+      questionSolved = false;
+
+      nextBtn.disabled = true;
+      nextBtn.textContent =
+        currentQuestionIndex === QUESTIONS.length - 1
+          ? "Finish & restart ↻"
+          : "Next question ▶";
+
+      q.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = option;
+        btn.addEventListener("click", () => handleOptionClick(index, btn));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleOptionClick(selectedIndex, button) {
+      if (questionSolved) return;
+      const q = QUESTIONS[currentQuestionIndex];
+
+      if (selectedIndex === q.correctIndex) {
+        questionSolved = true;
+        button.classList.add("correct");
+        feedbackEl.textContent = "Correct! 🎉";
+
+        score++;
+        scoreEl.textContent = "Score: " + score;
+
+        Array.from(optionsContainer.children).forEach((btn) => {
+          btn.disabled = true;
+          if (btn !== button) {
+            btn.classList.add("disabled-option");
+          }
+        });
+
+        nextBtn.disabled = false;
+        startFireworks();
+      } else {
+        button.classList.add("wrong");
+        feedbackEl.textContent = "Not quite. Try again!";
+        setTimeout(() => button.classList.remove("wrong"), 500);
+      }
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if (currentQuestionIndex < QUESTIONS.length - 1) {
+        currentQuestionIndex++;
+      } else {
+        // restart quiz
+        currentQuestionIndex = 0;
+        score = 0;
+      }
+      renderQuestion();
+    });
+
+    // ------------------- Fireworks effect -------------------
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function createBurst() {
+      const x = canvas.width / 2;
+      const y = canvas.height / 3;
+
+      for (let i = 0; i < 80; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1.5;
+
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          radius: Math.random() * 3 + 1,
+          color: `hsl(${Math.floor(Math.random() * 360)}, 80%, 60%)`,
+        });
+      }
+    }
+
+    function startFireworks() {
+      fireworksActive = true;
+      createBurst();
+      setTimeout(createBurst, 180);
+      setTimeout(createBurst, 360);
+
+      if (!animationId) {
+        animateFireworks();
+      }
+
+      setTimeout(() => {
+        fireworksActive = false;
+      }, 1200);
+    }
+
+    function animateFireworks() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.02; // gravity
+        p.alpha -= 0.015;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.globalAlpha = p.alpha;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      if (particles.length || fireworksActive) {
+        animationId = requestAnimationFrame(animateFireworks);
+      } else {
+        animationId = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // ------------------- Init -------------------
+    renderQuestion();
+  </script>
+</body>
+</html>
