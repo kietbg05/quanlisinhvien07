@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>English Picture Quiz</title>
+  <title>Bubble Pop Relax Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
     }
 
     body {
@@ -17,504 +18,339 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
-      background: radial-gradient(circle at top, #1e293b, #020617);
+      background: radial-gradient(circle at top, #38bdf8, #0f172a);
       color: #e5e7eb;
     }
 
-    .app {
+    .game {
       width: 100%;
-      max-width: 480px;
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 24px;
-      padding: 20px 18px 24px;
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.6),
-        0 0 40px rgba(59, 130, 246, 0.3);
-      border: 1px solid rgba(148, 163, 184, 0.3);
+      max-width: 500px;
+      height: 80vh;
+      max-height: 650px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 22px;
+      padding: 16px 18px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
       position: relative;
       overflow: hidden;
-    }
-
-    h1 {
-      font-size: 1.4rem;
-      text-align: center;
-      margin-bottom: 10px;
-      letter-spacing: 0.03em;
-    }
-
-    h1 span {
-      font-size: 1.6rem;
-    }
-
-    .subtitle {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #9ca3af;
-      margin-bottom: 14px;
     }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
+      align-items: center;
       margin-bottom: 10px;
-      color: #9ca3af;
     }
 
-    .top-bar span strong {
+    .title {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .score {
+      font-size: 0.9rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.32);
+      border: 1px solid rgba(45, 212, 191, 0.7);
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.16s ease-out;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #22c55e, #06b6d4);
+      color: white;
+      flex: 1;
+      text-align: center;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.07);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(34, 197, 94, 0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.7);
       color: #e5e7eb;
     }
 
-    .card {
-      background: linear-gradient(145deg, #020617, #0f172a);
-      border-radius: 20px;
-      padding: 18px 14px 16px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+    .hint {
+      font-size: 0.78rem;
+      opacity: 0.75;
+    }
+
+    .play-area {
+      flex: 1;
+      margin-top: 4px;
+      border-radius: 18px;
+      background: radial-gradient(circle at bottom, #0f172a, #020617);
+      border: 1px solid rgba(30, 64, 175, 0.7);
       position: relative;
       overflow: hidden;
     }
 
-    .emoji-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 8px;
-    }
-
-    .emoji {
-      font-size: 4rem;
-      filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.6));
-      transition: transform 0.2s ease;
-    }
-
-    .hint {
-      text-align: center;
-      font-size: 0.95rem;
-      color: #a5b4fc;
-      margin-bottom: 12px;
-    }
-
-    .options {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    @media (min-width: 420px) {
-      .options {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    .option {
-      border: none;
-      border-radius: 999px;
-      padding: 8px 10px;
-      font-size: 0.9rem;
-      background: rgba(30, 64, 175, 0.7);
-      color: #e5e7eb;
-      cursor: pointer;
-      transition:
-        transform 0.1s ease,
-        box-shadow 0.1s ease,
-        background 0.15s ease,
-        border 0.15s ease;
-      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(129, 140, 248, 0.3);
-      text-transform: lowercase;
-    }
-
-    .option::first-letter {
-      text-transform: uppercase;
-    }
-
-    .option:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.9);
-      background: rgba(37, 99, 235, 0.9);
-    }
-
-    .option:active {
-      transform: translateY(0);
-      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.9);
-    }
-
-    .option.correct {
-      background: rgba(22, 163, 74, 0.9);
-      border-color: rgba(34, 197, 94, 0.9);
-      box-shadow: 0 0 16px rgba(34, 197, 94, 0.7);
-    }
-
-    .option.wrong {
-      background: rgba(185, 28, 28, 0.9);
-      border-color: rgba(248, 113, 113, 0.9);
-      box-shadow: 0 0 12px rgba(248, 113, 113, 0.7);
-    }
-
-    .option.disabled {
-      opacity: 0.7;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .feedback {
-      min-height: 22px;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-bottom: 4px;
-    }
-
-    .feedback.correct-text {
-      color: #4ade80;
-    }
-
-    .feedback.wrong-text {
-      color: #fca5a5;
-    }
-
-    .next-btn {
-      width: 100%;
-      margin-top: 14px;
-      border-radius: 999px;
-      border: none;
-      padding: 10px 14px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(90deg, #4f46e5, #06b6d4);
-      color: #e5e7eb;
-      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.6);
-      transition:
-        transform 0.12s ease,
-        box-shadow 0.12s ease,
-        filter 0.12s ease,
-        opacity 0.12s ease;
-    }
-
-    .next-btn:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.8);
-      filter: brightness(1.05);
-    }
-
-    .next-btn:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.7);
-    }
-
-    .next-btn:disabled {
-      opacity: 0.5;
-      cursor: default;
-      box-shadow: none;
-    }
-
-    .shake {
-      animation: shake 0.35s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-4px); }
-      40% { transform: translateX(4px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
-    }
-
-    #fireworks {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 100;
-    }
-
-    .spark {
+    .bubble {
       position: absolute;
+      bottom: -120px;
       border-radius: 50%;
-      opacity: 0;
-      transform: scale(0);
-      animation: explode 0.9s ease-out forwards;
-      mix-blend-mode: screen;
+      background: radial-gradient(circle at 30% 30%, #e0f2fe, #38bdf8);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+      opacity: 0.9;
+      cursor: pointer;
+      animation-name: floatUp;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
     }
 
-    @keyframes explode {
+    @keyframes floatUp {
       0% {
-        opacity: 1;
-        transform: scale(0);
-      }
-      70% {
-        opacity: 1;
-        transform: scale(1);
+        transform: translateY(0) scale(1);
+        opacity: 0.95;
       }
       100% {
+        transform: translateY(-120vh) scale(0.9);
         opacity: 0;
-        transform: scale(1.6);
       }
     }
 
-    .final-text {
-      font-size: 1rem;
+    .bubble.popped {
+      animation: pop 0.25s ease-out forwards;
+      box-shadow: 0 0 20px rgba(250, 250, 250, 0.9);
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.7);
+        opacity: 0;
+      }
+    }
+
+    .float-text {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.9rem;
+      opacity: 0.6;
+      pointer-events: none;
       text-align: center;
-      margin-top: 6px;
-      color: #e5e7eb;
     }
 
-    .final-text span {
-      color: #4ade80;
-      font-weight: 600;
+    .relax-message {
+      font-size: 0.85rem;
+      margin-top: 4px;
+      opacity: 0.85;
     }
 
-    .badge {
-      font-size: 0.8rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(37, 99, 235, 0.2);
-      border: 1px solid rgba(96, 165, 250, 0.7);
-      color: #bfdbfe;
+    .relax-message strong {
+      color: #6ee7b7;
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1><span>🔤</span> English Picture Quiz</h1>
-    <div class="subtitle">Đoán từ tiếng Anh qua hình (emoji) – chọn 1 trong 3 đáp án</div>
-
+  <div class="game">
     <div class="top-bar">
-      <span id="progress">Question 1 / 40</span>
-      <span id="score">Score: <strong>0</strong></span>
+      <div class="title">Bubble Pop Relax</div>
+      <div class="score" id="scoreDisplay">Popped: 0</div>
     </div>
 
-    <div class="card" id="card">
-      <div class="emoji-box">
-        <div id="emoji" class="emoji">🍎</div>
-      </div>
-      <div id="hint" class="hint">Hint: A red or green fruit.</div>
-
-      <div class="options">
-        <button class="option" data-index="0"></button>
-        <button class="option" data-index="1"></button>
-        <button class="option" data-index="2"></button>
-      </div>
-
-      <div id="feedback" class="feedback"></div>
+    <div class="subtitle">
+      No timer, no losing. Just pop bubbles and relax. 🌊
     </div>
 
-    <button id="nextBtn" class="next-btn" disabled>Next ➜</button>
-    <div id="finalSummary" class="final-text"></div>
+    <div class="controls">
+      <button class="btn btn-primary" id="toggleBtn">Start</button>
+      <button class="btn btn-ghost" id="clearBtn">Clear bubbles</button>
+    </div>
+
+    <div class="hint">
+      Tip: Put on some lo-fi music and just tap slowly. 💆‍♂️
+    </div>
+
+    <div class="play-area" id="playArea">
+      <div class="float-text" id="centerText">
+        Tap <strong>Start</strong> and pop the bubbles calmly.
+      </div>
+    </div>
+
+    <div class="relax-message">
+      Mode: <strong>Chill</strong> – score is just for fun, don't worry about it.
+    </div>
   </div>
 
-  <div id="fireworks"></div>
-
   <script>
-    // Danh sách câu hỏi: emoji + đáp án + gợi ý + 3 lựa chọn
-    const questions = [
-      { emoji: "🍎", answer: "apple", hint: "A red or green fruit.", options: ["apple", "banana", "pear"] },
-      { emoji: "🐱", answer: "cat", hint: "A small pet that says 'meow'.", options: ["cat", "dog", "rabbit"] },
-      { emoji: "🐶", answer: "dog", hint: "A loyal animal that says 'woof'.", options: ["cat", "dog", "cow"] },
-      { emoji: "🚗", answer: "car", hint: "You drive this on the road.", options: ["car", "bus", "train"] },
-      { emoji: "✈️", answer: "plane", hint: "It flies in the sky.", options: ["car", "plane", "ship"] },
-      { emoji: "📱", answer: "phone", hint: "You use it to call your friends.", options: ["computer", "phone", "television"] },
-      { emoji: "🕒", answer: "clock", hint: "It tells you the time.", options: ["door", "clock", "plate"] },
-      { emoji: "🍕", answer: "pizza", hint: "Round food with cheese on top.", options: ["pizza", "bread", "cake"] },
-      { emoji: "🎧", answer: "headphones", hint: "You wear it on your ears to listen to music.", options: ["hat", "headphones", "glasses"] },
-      { emoji: "🏠", answer: "house", hint: "You live in this place.", options: ["school", "house", "hotel"] },
-      { emoji: "📚", answer: "books", hint: "You read these to learn.", options: ["shoes", "books", "cups"] },
-      { emoji: "🚌", answer: "bus", hint: "Many people ride this on the road.", options: ["bus", "bike", "car"] },
-      { emoji: "🐟", answer: "fish", hint: "It lives in water.", options: ["bird", "fish", "cat"] },
-      { emoji: "🐘", answer: "elephant", hint: "A very big animal with a long trunk.", options: ["mouse", "elephant", "dog"] },
-      { emoji: "🌧️", answer: "rain", hint: "Water falling from the sky.", options: ["snow", "rain", "wind"] },
-      { emoji: "☀️", answer: "sun", hint: "It shines in the sky during the day.", options: ["moon", "sun", "star"] },
-      { emoji: "🌙", answer: "moon", hint: "You see it at night.", options: ["sun", "cloud", "moon"] },
-      { emoji: "🧊", answer: "ice", hint: "Very cold water.", options: ["fire", "ice", "sand"] },
-      { emoji: "☕", answer: "coffee", hint: "A hot drink that helps you stay awake.", options: ["juice", "coffee", "milk"] },
-      { emoji: "🍔", answer: "burger", hint: "Meat between two pieces of bread.", options: ["burger", "sandwich", "salad"] },
-      { emoji: "🎂", answer: "cake", hint: "Sweet dessert you eat on your birthday.", options: ["bread", "cake", "rice"] },
-      { emoji: "🧠", answer: "brain", hint: "You use it to think.", options: ["heart", "brain", "stomach"] },
-      { emoji: "🧑‍🍳", answer: "chef", hint: "A person who cooks food in a restaurant.", options: ["driver", "teacher", "chef"] },
-      { emoji: "👟", answer: "shoes", hint: "You wear them on your feet.", options: ["shoes", "gloves", "hat"] },
-      { emoji: "🧥", answer: "coat", hint: "You wear it when it is cold.", options: ["coat", "shirt", "shorts"] },
-      { emoji: "🎹", answer: "piano", hint: "A big instrument you play with your fingers.", options: ["piano", "drum", "guitar"] },
-      { emoji: "🎸", answer: "guitar", hint: "An instrument with strings.", options: ["guitar", "piano", "violin"] },
-      { emoji: "⚽", answer: "football", hint: "You kick this ball in a popular sport.", options: ["basketball", "football", "tennis"] },
-      { emoji: "🏀", answer: "basketball", hint: "You throw this ball into a hoop.", options: ["football", "volleyball", "basketball"] },
-      { emoji: "💻", answer: "laptop", hint: "A small computer you can carry.", options: ["laptop", "tablet", "phone"] },
-      { emoji: "🖱️", answer: "mouse", hint: "You move it to control the cursor.", options: ["mouse", "keyboard", "speaker"] },
-      { emoji: "🛏️", answer: "bed", hint: "You sleep on it.", options: ["chair", "table", "bed"] },
-      { emoji: "🪑", answer: "chair", hint: "You sit on it.", options: ["chair", "bag", "box"] },
-      { emoji: "🚲", answer: "bicycle", hint: "You ride it with two wheels.", options: ["bicycle", "car", "train"] },
-      { emoji: "🚑", answer: "ambulance", hint: "A special car that takes sick people to the hospital.", options: ["taxi", "ambulance", "truck"] },
-      { emoji: "🐼", answer: "panda", hint: "A black and white bear that eats bamboo.", options: ["panda", "tiger", "koala"] },
-      { emoji: "🐍", answer: "snake", hint: "A long animal with no legs.", options: ["frog", "snake", "horse"] },
-      { emoji: "🍓", answer: "strawberry", hint: "A small red fruit with seeds on the outside.", options: ["strawberry", "apple", "grape"] },
-      { emoji: "🍌", answer: "banana", hint: "A long yellow fruit.", options: ["banana", "pear", "orange"] },
-      { emoji: "🐴", answer: "horse", hint: "A big animal people can ride.", options: ["pig", "cow", "horse"] }
-    ];
+    const playArea = document.getElementById("playArea");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const centerText = document.getElementById("centerText");
 
-    // Shuffle câu hỏi lúc bắt đầu
-    questions.sort(() => Math.random() - 0.5);
-
-    const emojiEl = document.getElementById("emoji");
-    const hintEl = document.getElementById("hint");
-    const progressEl = document.getElementById("progress");
-    const scoreEl = document.getElementById("score").querySelector("strong");
-    const feedbackEl = document.getElementById("feedback");
-    const optionButtons = document.querySelectorAll(".option");
-    const nextBtn = document.getElementById("nextBtn");
-    const card = document.getElementById("card");
-    const finalSummary = document.getElementById("finalSummary");
-    const fireworksContainer = document.getElementById("fireworks");
-
-    let currentIndex = 0;
+    let isRunning = false;
+    let bubbleInterval = null;
     let score = 0;
-    let answered = false;
-    let finished = false;
+    let audioCtx = null;
 
-    function shuffleArray(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
+    function updateScore() {
+      scoreDisplay.textContent = "Popped: " + score;
     }
 
-    function triggerFireworks() {
-      for (let i = 0; i < 16; i++) {
-        const spark = document.createElement("div");
-        spark.className = "spark";
-        const size = Math.random() * 6 + 6;
-        spark.style.width = size + "px";
-        spark.style.height = size + "px";
-        spark.style.left = Math.random() * 100 + "%";
-        spark.style.top = Math.random() * 50 + "%";
-        spark.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
-        fireworksContainer.appendChild(spark);
-        setTimeout(() => spark.remove(), 900);
-      }
-    }
+    function createBubble() {
+      const areaRect = playArea.getBoundingClientRect();
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
 
-    function shakeCard() {
-      card.classList.remove("shake");
-      // reflow để reset animation
-      void card.offsetWidth;
-      card.classList.add("shake");
-    }
+      const size = 30 + Math.random() * 60; // 30–90 px
+      bubble.style.width = size + "px";
+      bubble.style.height = size + "px";
 
-    function setOptionsDisabled(disabled) {
-      optionButtons.forEach(btn => {
-        if (disabled) {
-          btn.classList.add("disabled");
-        } else {
-          btn.classList.remove("disabled");
+      // random horizontal position
+      const maxLeft = areaRect.width - size;
+      const left = Math.random() * maxLeft;
+      bubble.style.left = left + "px";
+
+      // random duration
+      const duration = 7 + Math.random() * 6; // 7–13s
+      bubble.style.animationDuration = duration + "s";
+
+      // optional small horizontal drift
+      const randomDelay = Math.random() * 2;
+      bubble.style.animationDelay = randomDelay + "s";
+
+      bubble.addEventListener("click", () => {
+        popBubble(bubble);
+      });
+
+      // remove when animation ends (in case user doesn't click)
+      bubble.addEventListener("animationend", () => {
+        if (bubble.parentNode === playArea) {
+          playArea.removeChild(bubble);
         }
       });
+
+      playArea.appendChild(bubble);
     }
 
-    function loadQuestion() {
-      const q = questions[currentIndex];
-      const shuffledOptions = shuffleArray(q.options);
+    function popBubble(bubble) {
+      // already popped
+      if (bubble.classList.contains("popped")) return;
 
-      answered = false;
-      finished = false;
-      feedbackEl.textContent = "";
-      feedbackEl.className = "feedback";
-      nextBtn.disabled = true;
-      finalSummary.textContent = "";
+      bubble.classList.add("popped");
+      score++;
+      updateScore();
+      playPopSound();
 
-      emojiEl.textContent = q.emoji;
-      hintEl.textContent = "Hint: " + q.hint;
-      progressEl.textContent = `Question ${currentIndex + 1} / ${questions.length}`;
-      scoreEl.textContent = String(score);
-
-      optionButtons.forEach((btn, idx) => {
-        btn.style.display = "inline-block";
-        btn.classList.remove("correct", "wrong", "disabled");
-        btn.textContent = shuffledOptions[idx];
-        btn.dataset.value = shuffledOptions[idx].toLowerCase();
-      });
-
-      setOptionsDisabled(false);
-    }
-
-    optionButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (answered) return;
-
-        const q = questions[currentIndex];
-        const selected = btn.dataset.value;
-        const correct = q.answer.toLowerCase();
-
-        answered = true;
-        setOptionsDisabled(true);
-
-        if (selected === correct) {
-          btn.classList.add("correct");
-          feedbackEl.textContent = "✅ Correct!";
-          feedbackEl.classList.add("correct-text");
-          score++;
-          scoreEl.textContent = String(score);
-          triggerFireworks();
-          shakeCard();
-        } else {
-          btn.classList.add("wrong");
-          feedbackEl.textContent = `❌ Wrong! Correct answer: "${q.answer}".`;
-          feedbackEl.classList.add("wrong-text");
-          optionButtons.forEach(b => {
-            if (b.dataset.value === correct) {
-              b.classList.add("correct");
-            }
-          });
+      setTimeout(() => {
+        if (bubble.parentNode === playArea) {
+          playArea.removeChild(bubble);
         }
+      }, 250);
+    }
 
-        nextBtn.disabled = false;
-      });
-    });
+    // Simple soft pop sound
+    function playPopSound() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
 
-    function showFinalResult() {
-      finished = true;
-      emojiEl.textContent = "🏁";
-      hintEl.textContent = "You finished all questions!";
-      optionButtons.forEach(btn => {
-        btn.style.display = "none";
-      });
-      feedbackEl.textContent = "";
-      const total = questions.length;
-      const percent = Math.round((score / total) * 100);
-      finalSummary.innerHTML = `Your score: <span>${score} / ${total}</span> (${percent}%)`;
+        const now = audioCtx.currentTime;
+        osc.frequency.setValueAtTime(500, now);
+        osc.frequency.exponentialRampToValueAtTime(900, now + 0.1);
 
-      if (percent >= 90) {
-        finalSummary.innerHTML += "<br><span class='badge'>Legend! 🔥</span>";
-      } else if (percent >= 70) {
-        finalSummary.innerHTML += "<br><span class='badge'>Nice job! ✨ Keep going!</span>";
-      } else {
-        finalSummary.innerHTML += "<br><span class='badge'>Keep practicing 💪</span>";
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.25, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+        osc.type = "sine";
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } catch (e) {
+        // ignore audio errors
+      }
+    }
+
+    function startRelaxMode() {
+      if (isRunning) return;
+      isRunning = true;
+      toggleBtn.textContent = "Pause";
+      centerText.style.opacity = 0.15;
+      centerText.innerHTML = "Breathe in... breathe out... and tap bubbles slowly.";
+
+      // spawn some bubbles instantly
+      for (let i = 0; i < 4; i++) {
+        setTimeout(createBubble, i * 300);
       }
 
-      nextBtn.textContent = "Play again 🔁";
-      nextBtn.disabled = false;
+      bubbleInterval = setInterval(() => {
+        createBubble();
+      }, 900);
     }
 
-    nextBtn.addEventListener("click", () => {
-      if (!finished && currentIndex < questions.length - 1) {
-        currentIndex++;
-        loadQuestion();
-      } else if (!finished && currentIndex === questions.length - 1) {
-        showFinalResult();
+    function stopRelaxMode() {
+      isRunning = false;
+      toggleBtn.textContent = "Start";
+      centerText.style.opacity = 0.6;
+      centerText.innerHTML = "Tap <strong>Start</strong> and pop the bubbles calmly.";
+      if (bubbleInterval) {
+        clearInterval(bubbleInterval);
+        bubbleInterval = null;
+      }
+    }
+
+    function clearBubbles() {
+      const bubbles = playArea.querySelectorAll(".bubble");
+      bubbles.forEach((b) => playArea.removeChild(b));
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      if (!isRunning) {
+        startRelaxMode();
       } else {
-        // restart game
-        score = 0;
-        currentIndex = 0;
-        questions.sort(() => Math.random() - 0.5);
-        nextBtn.textContent = "Next ➜";
-        loadQuestion();
+        stopRelaxMode();
       }
     });
 
-    // Khởi động
-    loadQuestion();
+    clearBtn.addEventListener("click", () => {
+      clearBubbles();
+    });
+
+    // init score text
+    updateScore();
   </script>
 </body>
 </html>
