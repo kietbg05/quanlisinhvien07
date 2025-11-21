@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -72,7 +72,6 @@ public class Program
 
         Console.WriteLine("Tong tuoi = " + totalAge);
         Console.WriteLine();
-
 
         Console.WriteLine("e) Hoc sinh co tuoi lon nhat:");
         var maxAge =
